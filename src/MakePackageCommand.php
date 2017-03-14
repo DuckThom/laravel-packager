@@ -4,6 +4,7 @@ namespace Luna\Packager;
 
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 
 /**
  * Class MakePackageCommand
@@ -51,22 +52,13 @@ class MakePackageCommand extends Command
     public function handle()
     {
         $this->base = $this->option('base-dir');
-        $this->vendor = Str::camel($this->argument('Vendor'));
-        $this->package = Str::camel($this->argument('Package'));
+        $this->vendor = Str::studly($this->argument('Vendor'));
+        $this->package = Str::studly($this->argument('Package'));
         $this->namespace = $this->vendor.'\\'.$this->package;
 
-        if (!is_dir($this->getPackageDir())) {
-            if (!mkdir($this->getPackageSrcDir(), 644, true)) {
-                $this->error('Failed to create directory: ' . $this->getPackageSrcDir());
-
-                return 1;
-            }
-
-            if (!mkdir($this->getPackageTestsDir(), 644, true)) {
-                $this->error('Failed to create directory: ' . $this->getPackageTestsDir());
-
-                return 1;
-            }
+        if (!File::exists($this->getPackageDir())) {
+            File::makeDirectory($this->getPackageSrcDir(), 0755, true);
+            File::makeDirectory($this->getPackageTestsDir(), 0755, true);
         } else {
             if (!$this->confirm("The package's directory already exists, do you want to continue? ")) {
                 return 1;
@@ -76,6 +68,8 @@ class MakePackageCommand extends Command
         $this->createServiceProvider();
         $this->createComposerFile();
         $this->createTestCaseFile();
+
+        $this->output->success("The package files have been created in: '" . $this->getPackageDir() . "'");
     }
 
     /**
@@ -86,10 +80,9 @@ class MakePackageCommand extends Command
      */
     public function getPackageDir($file = '')
     {
-        return realpath($this->base.DIRECTORY_SEPARATOR.
+        return base_path($this->base.DIRECTORY_SEPARATOR.
             $this->vendor.DIRECTORY_SEPARATOR.
-            $this->package.DIRECTORY_SEPARATOR.
-            $file);
+            $this->package.($file ? DIRECTORY_SEPARATOR . $file : ''));
     }
 
     /**
@@ -100,9 +93,7 @@ class MakePackageCommand extends Command
      */
     public function getPackageSrcDir($file = '')
     {
-        return realpath($this->getPackageDir().
-            DIRECTORY_SEPARATOR.'src'.
-            DIRECTORY_SEPARATOR.$file);
+        return $this->getPackageDir('src'.($file ? DIRECTORY_SEPARATOR.$file : ''));
     }
 
     /**
@@ -113,9 +104,21 @@ class MakePackageCommand extends Command
      */
     public function getPackageTestsDir($file = '')
     {
-        return realpath($this->getPackageDir().
-            DIRECTORY_SEPARATOR.'tests'.
-            DIRECTORY_SEPARATOR.$file);
+        return $this->getPackageDir('tests'.($file ? DIRECTORY_SEPARATOR.$file : ''));
+    }
+
+    /**
+     * Get the path to the stubs directory
+     *
+     * @param  string  $file
+     * @return string
+     */
+    public function getStubsDir($file = '')
+    {
+        return realpath(
+            __DIR__.DIRECTORY_SEPARATOR.
+            '..'.DIRECTORY_SEPARATOR.
+            'stubs'.($file ? DIRECTORY_SEPARATOR.$file : ''));
     }
 
     /**
@@ -125,12 +128,12 @@ class MakePackageCommand extends Command
      */
     public function createServiceProvider()
     {
-        $serviceProviderClassName = Str::camel($this->package.'ServiceProvider');
-        $serviceProvider = file_get_contents(__DIR__.'../stubs/ServiceProvider.stub');
-        $serviceProvider = $this->replaceVariables('{{namespace}}', $this->namespace, $serviceProvider);
-        $serviceProvider = $this->replaceVariables('{{class}}', $serviceProviderClassName, $serviceProvider);
+        $serviceProviderClassName = Str::studly($this->package.'ServiceProvider');
+        $serviceProvider = File::get($this->getStubsDir('ServiceProvider.stub'));
+        $serviceProvider = $this->replaceVariable('{{namespace}}', $this->namespace, $serviceProvider);
+        $serviceProvider = $this->replaceVariable('{{class}}', $serviceProviderClassName, $serviceProvider);
 
-        file_put_contents(
+        File::put(
             $this->getPackageSrcDir($serviceProviderClassName.'.php'),
             $serviceProvider
         );
@@ -143,11 +146,11 @@ class MakePackageCommand extends Command
      */
     public function createComposerFile()
     {
-        $composer = file_get_contents(__DIR__.'../stubs/composer.stub');
+        $composer = File::get($this->getStubsDir('composer.stub'));
         $composer = $this->replaceVariable('{{package}}', strtolower($this->vendor.'/'.$this->package), $composer);
-        $composer = $this->replaceVariable('{{namespace}}', $this->namespace.'\\', $composer);
+        $composer = $this->replaceVariable('{{namespace}}', $this->vendor.'\\\\'.$this->package.'\\\\', $composer);
 
-        file_put_contents(
+        File::put(
             $this->getPackageDir('composer.json'),
             $composer
         );
@@ -160,9 +163,9 @@ class MakePackageCommand extends Command
      */
     public function createTestCaseFile()
     {
-        $testCase = file_get_contents(__DIR__.'../stubs/TestCase.stub');
+        $testCase = File::get($this->getStubsDir('TestCase.stub'));
 
-        file_put_contents(
+        File::put(
             $this->getPackageTestsDir('composer.json'),
             $testCase
         );
