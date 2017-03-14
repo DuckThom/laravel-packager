@@ -30,7 +30,7 @@ Then, add the service provider to `config/app.php`:
 
 <h3># Usage</h3>
 ```
-    php artisan make:package [--base-dir=packages]
+    php artisan make:package <Vendor> <Package> [--base-dir=packages]
 ```
 
 Be default, the package files are created in `<project_root>/packages/Vendor/Package`.
