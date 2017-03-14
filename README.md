@@ -10,7 +10,7 @@
 </p>
 
 <h3># Prerequisites</h3>
-This package should run on PHP 5.4+ and Laravel 5.0+.
+This package should run on PHP 5.4+ and Laravel 5.1+.
 
 <h3># Setup</h3>
 First, add this package to your `composer.json`:
