@@ -29,6 +29,7 @@ Then, add the service provider to `config/app.php`:
 ```
 
 <h3># Usage</h3>
+
 ```
     php artisan make:package <Vendor> <Package> [--base-dir=packages]
 ```
