@@ -16,8 +16,8 @@ class MakePackageCommand extends Command
     /**
      * @var string
      */
-    protected $signature = 'make:package {Vendor} {Package} ' .
-                            '{--base-dir=packages : Specify a different base dir for the packages}';
+    protected $signature = 'make:package {Vendor} {Package}
+                            {--base-dir=packages : Specify a different base dir for the packages}';
 
     /**
      * @var string
