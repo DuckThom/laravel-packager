@@ -48,7 +48,7 @@ class MakePackageCommand extends Command
      *
      * @return int
      */
-    protected function handle()
+    public function handle()
     {
         $this->base = $this->option('base-dir');
         $this->vendor = Str::camel($this->argument('Vendor'));
