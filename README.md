@@ -4,7 +4,7 @@
 <a href="https://packagist.org/packages/luna/laravel-packager"><img src="https://poser.pugx.org/luna/laravel-packager/v/stable" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/luna/laravel-packager"><img src="https://poser.pugx.org/luna/laravel-packager/downloads" alt="Total Downloads"></a>
 <a href="https://packagist.org/packages/luna/laravel-packager"><img src="https://poser.pugx.org/luna/laravel-packager/v/unstable" alt="Latest Unstable Version"></a>
-<a href="https://styleci.io/repos/82349568"><img src="https://styleci.io/repos/82349568/shield?branch=master" alt="StyleCI"></a>
+<a href="https://styleci.io/repos/84989989"><img src="https://styleci.io/repos/84989989/shield?branch=master" alt="StyleCI"></a>
 <a href="https://travis-ci.org/DuckThom/laravel-packager"><img src="https://travis-ci.org/DuckThom/laravel-packager.svg?branch=master" alt="TravisCI"></a>
 <a href="https://packagist.org/packages/luna/laravel-packager"><img src="https://poser.pugx.org/luna/laravel-packager/license" alt="License"></a>
 </p>
