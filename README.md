@@ -28,6 +28,29 @@ Then, add the service provider to `config/app.php`:
     ];
 ```
 
+If you want to use the package in the current project without adding it to, for example, packagist just yet, ie. for development, add the following line to your main project's `composer.json`:
+
+```
+{
+    "autoload": {
+        "classmap": [
+            "database",
+            "packages"   #  Add this line to your main projects composer.json
+        ],
+        "psr-4": {
+            "App\\": "app/",
+            "Tests\\": "tests/"
+        }
+    }
+}
+```
+
+After adding that line, run `composer dump`, and add the package's service provider to `config/app.php`.
+
+For example, you made a package which has the following structure: `<project_root>/packages/Foo/Bar/BarServiceProvider.php`.
+
+When you add the line to the `composer.json` in the project root, you can use that service provider with it's usual namespace: `Foo\Bar\BarServiceProvider::class`.
+
 <h3># Usage</h3>
 
 ```
