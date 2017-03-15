@@ -1,0 +1,13 @@
+<h1 align="center">{{package}}</h1>
+
+<h3># Prerequisites</h3>
+
+Anything the users need to do/have before using this package?
+
+<h3># Setup</h3>
+
+How do people install your package?
+
+<h3># Usage</h3>
+
+How to use the package?

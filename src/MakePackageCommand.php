@@ -68,6 +68,7 @@ class MakePackageCommand extends Command
         $this->createServiceProvider();
         $this->createComposerFile();
         $this->createTestCaseFile();
+        $this->createReadmeFile();
 
         $this->output->success("The package files have been created in: '" . $this->getPackageDir() . "'");
     }
@@ -168,6 +169,22 @@ class MakePackageCommand extends Command
         File::put(
             $this->getPackageTestsDir('composer.json'),
             $testCase
+        );
+    }
+
+    /**
+     * Create a README.md file
+     *
+     * @return void
+     */
+    public function createReadmeFile()
+    {
+        $readme = File::get($this->getStubsDir('readme.stub'));
+        $readme = $this->replaceVariable("{{package}}", $this->package, $readme);
+
+        File::put(
+            $this->getPackageDir('README.md'),
+            $readme
         );
     }
 
